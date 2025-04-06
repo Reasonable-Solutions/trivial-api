@@ -59,11 +59,15 @@
 
         # Build the actual crate itself, reusing the dependency
         # artifacts from above.
-        my-crate = craneLib.buildPackage (commonArgs // {
-          inherit cargoArtifacts;
-        });
-      in
-      {
+        my-crate =
+          craneLib.buildPackage (commonArgs // { inherit cargoArtifacts; });
+
+        dockerTag = if lib.hasAttr "rev" self then
+          "${builtins.toString self.revCount}-${self.shortRev}"
+        else
+          "gitDirty";
+
+      in {
         checks = {
           # Build the crate as part of `nix flake check` for convenience
           inherit my-crate;
@@ -79,14 +83,11 @@
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           });
 
-          my-crate-doc = craneLib.cargoDoc (commonArgs // {
-            inherit cargoArtifacts;
-          });
+          my-crate-doc =
+            craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
 
           # Check formatting
-          my-crate-fmt = craneLib.cargoFmt {
-            inherit src;
-          };
+          my-crate-fmt = craneLib.cargoFmt { inherit src; };
 
           my-crate-toml-fmt = craneLib.taploFmt {
             src = pkgs.lib.sources.sourceFilesBySuffices src [ ".toml" ];
@@ -95,14 +96,10 @@
           };
 
           # Audit dependencies
-          my-crate-audit = craneLib.cargoAudit {
-            inherit src advisory-db;
-          };
+          my-crate-audit = craneLib.cargoAudit { inherit src advisory-db; };
 
           # Audit licenses
-          my-crate-deny = craneLib.cargoDeny {
-            inherit src;
-          };
+          my-crate-deny = craneLib.cargoDeny { inherit src; };
 
           # Run tests with cargo-nextest
           # Consider setting `doCheck = false` on `my-crate` if you do not want
@@ -116,16 +113,18 @@
         };
 
         packages = {
+          image = pkgs.dockerTools.buildImage {
+            name = "registry.fyfaen.as/trivial-api";
+            tag = dockerTag;
+            config = { Cmd = [ "${my-crate}/bin/my-crate" ]; };
+          };
           default = my-crate;
         } // lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-          my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov (commonArgs // {
-            inherit cargoArtifacts;
-          });
+          my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov
+            (commonArgs // { inherit cargoArtifacts; });
         };
 
-        apps.default = flake-utils.lib.mkApp {
-          drv = my-crate;
-        };
+        apps.default = flake-utils.lib.mkApp { drv = my-crate; };
 
         devShells.default = craneLib.devShell {
           # Inherit inputs from checks.
@@ -137,6 +136,7 @@
           # Extra inputs can be added here; cargo and rustc are provided by default.
           packages = [
             # pkgs.ripgrep
+            pkgs.rust-analyzer
           ];
         };
       });
