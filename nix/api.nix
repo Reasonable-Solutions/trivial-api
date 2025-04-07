@@ -62,8 +62,8 @@ pkgs.writeText "trivial-k8s.yaml" ''
       cluster.fyfaen.as/external: "true"
   spec:
     parentRefs:
-      - name: fyfaen-gw
-        namespace: gateway-namespace
+      - name: cluster-gw
+        namespace: nginx-gateway
     hostnames:
       - api.fyfaen.as
     rules:
