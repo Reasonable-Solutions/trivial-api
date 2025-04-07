@@ -120,7 +120,7 @@
           image = pkgs.dockerTools.buildImage {
             name = imageName;
             tag = dockerTag;
-            config = { Cmd = [ "${my-crate}/bin/my-crate" ]; };
+            config = { Cmd = [ "${my-crate}/bin/trivial-api" ]; };
           };
           default = my-crate;
         } // lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
