@@ -23,6 +23,8 @@ pkgs.writeText "trivial-k8s.yaml" ''
         labels:
           app.kubernetes.io/name: trivial
       spec:
+        imagePullSecrets:
+          - name: nix-serve-regcred
         containers:
           - name: trivial
             image: ${imageName}
