@@ -47,7 +47,7 @@ pkgs.writeText "trivial-k8s.yaml" ''
         port: 3000
         targetPort: 3000
   ---
-  apiVersion: gateway.networking.k8s.io/v1beta1
+  apiVersion: gateway.networking.k8s.io/v1
   kind: HTTPRoute
   metadata:
     name: trivial
