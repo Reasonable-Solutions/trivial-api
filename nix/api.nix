@@ -28,6 +28,7 @@ pkgs.writeText "trivial-k8s.yaml" ''
         containers:
           - name: trivial
             image: ${imageName}
+            command: ["/bin/my-crate"]
             ports:
               - containerPort: 3000
   ---
