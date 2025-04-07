@@ -28,7 +28,6 @@ pkgs.writeText "trivial-k8s.yaml" ''
         containers:
           - name: trivial
             image: ${imageName}
-            command: ["./bin/trivial-api"]
             ports:
               - containerPort: 3000
   ---
