@@ -62,6 +62,7 @@
         my-crate =
           craneLib.buildPackage (commonArgs // { inherit cargoArtifacts; });
 
+        imageName = "registry.fyfaen.as/trivial-api";
         dockerTag = if lib.hasAttr "rev" self then
           "${builtins.toString self.revCount}-${self.shortRev}"
         else
@@ -113,8 +114,11 @@
         };
 
         packages = {
+          manifests = pkgs.callPackage ./nix/api.nix {
+            imageName = "${imageName}:${dockerTag}";
+          };
           image = pkgs.dockerTools.buildImage {
-            name = "registry.fyfaen.as/trivial-api";
+            name = imageName;
             tag = dockerTag;
             config = { Cmd = [ "${my-crate}/bin/my-crate" ]; };
           };
@@ -123,7 +127,6 @@
           my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov
             (commonArgs // { inherit cargoArtifacts; });
         };
-
         apps.default = flake-utils.lib.mkApp { drv = my-crate; };
 
         devShells.default = craneLib.devShell {
