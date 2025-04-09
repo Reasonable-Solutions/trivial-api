@@ -2,6 +2,7 @@ use axum::{routing::get, Router};
 use tracing::{self, Level};
 
 async fn say_hello() -> Result<String, (axum::http::StatusCode, String)> {
+    tracing::info!("cool request");
     Ok("hello".to_string())
 }
 
