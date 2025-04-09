@@ -1,0 +1,16 @@
+* Trivial-api
+This is a trivial api that exists only to be deployed and have an action.
+It's the test project part of finally getting around to bootstrapping all my new infra to be 100% nix based
+and on Talos on Hetzner.
+There's a pipeline that runs _quite fast_, it builds images and deploys them. The api can found at
+http://api.fyfaen.as/trivial where it serves up a GET that gives you the string "hello".
+
+Theres is a little management dashboard at https://nix.fyfaen.as that shows all the builds that are currently
+available.
+
+The workings are as follows:
+There is a webhook that creates a Build Crd.
+The build crd is handled by a controller that spawns jobs that do the actual build.
+The jobs report back over Nats and once they are completed they have uploaded an image to
+the OCI registry and sent a manifest to a deploy job.
+The deploy job throws yaml at the cluster and messages at the controller.

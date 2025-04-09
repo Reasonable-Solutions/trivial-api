@@ -21,7 +21,7 @@ jobs:
               "git_repo": "https://github.com/Reasonable-Solutions/trivial-api.git",
               "git_ref": "master",
               "nix_attr": null,
-              "image_name": "not used"
+              "image_name": "field is not used here"
             }' \
             https://nix.fyfaen.as/trigger-build)
 
