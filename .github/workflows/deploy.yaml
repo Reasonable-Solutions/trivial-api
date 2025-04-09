@@ -23,7 +23,7 @@ jobs:
               "nix_attr": null,
               "image_name": "not used"
             }' \
-            https://nix.fyfaen.as/trigger-build | jq -r .)
+            https://nix.fyfaen.as/trigger-build)
 
           echo "build_id=$ID" >> "$GITHUB_OUTPUT"
 
