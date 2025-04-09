@@ -1,0 +1,32 @@
+name: deploy trivial-api
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: trigger build
+        id: trigger
+        run: |
+          set -euo pipefail
+          ID=$(curl -s -XPOST \
+            -H "x-webhook-token: ${{ secrets.DEPLOY_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "git_repo": "https://github.com/Reasonable-Solutions/trivial-api.git",
+              "git_ref": "master",
+              "nix_attr": null,
+              "image_name": "not used"
+            }' \
+            https://nix.fyfaen.as/trigger-build | jq -r .)
+
+          echo "build_id=$ID" >> "$GITHUB_OUTPUT"
+
+      - name: logs
+        run: |
+          curl --no-buffer https://nix.fyfaen.as/logs/${{ steps.trigger.outputs.build_id }}
