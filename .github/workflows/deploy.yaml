@@ -26,9 +26,12 @@ jobs:
             https://nix.fyfaen.as/trigger-build)
 
           echo "build_id=$ID" >> "$GITHUB_OUTPUT"
+
       - name: wait a sec
-        run: sleep 15
+        run: sleep 5
 
       - name: stream deploy logs
         run: |
-           curl --no-buffer https://nix.fyfaen.as/logs/${{ steps.trigger.outputs.build_id }}
+          id=${{ steps.trigger.outputs.build_id }}
+          id="${id#build-}"
+          curl --no-buffer https://nix.fyfaen.as/logs/$id
