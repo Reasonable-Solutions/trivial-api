@@ -61,7 +61,7 @@ jobs:
             sleep 10
           done
 
-          MESSAGE=$(echo $RESPONSE | jq -r '.message // "No message provided"')
+          MESSAGE=$(echo $RESPONSE | jq -r '.message')
           echo "Final status: $STATUS"
           echo "Message: $MESSAGE"
 
