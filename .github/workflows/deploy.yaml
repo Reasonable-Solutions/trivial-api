@@ -27,7 +27,7 @@ jobs:
 
           echo "build_id=$ID" >> "$GITHUB_OUTPUT"
       - name: wait a sec
-        run: sleep 5
+        run: sleep 15
 
       - name: stream deploy logs
         run: |
