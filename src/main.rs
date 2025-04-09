@@ -8,6 +8,7 @@ async fn say_hello() -> Result<String, (axum::http::StatusCode, String)> {
 
 #[tokio::main]
 async fn main() {
+    let thisiSaClippyWarning = 5;
     tracing_subscriber::fmt().with_max_level(Level::INFO).init();
     tracing::info!("starting trivial-api");
     let app = Router::new().route("/trivial", get(say_hello));
