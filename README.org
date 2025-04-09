@@ -11,6 +11,5 @@ available.
 The workings are as follows:
 - There is a webhook that creates a Build Crd.
 - The build crd is handled by a controller that spawns jobs that do the actual build.
-- The jobs report back over Nats and once they are completed they have uploaded an image to
-- the OCI registry and sent a manifest to a deploy job.
-- The deploy job throws yaml at the cluster and messages at the controller.
+- The jobs report back over Nats and once they are completed they upload an image and send a manifest to the deploye
+- The deploy job throws yaml at the cluster and messages at the controller with the status
